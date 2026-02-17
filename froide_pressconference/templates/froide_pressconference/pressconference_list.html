@@ -1,0 +1,50 @@
+{% extends "froide_pressconference/base.html" %}
+{% load i18n %}
+{% load markup %}
+{% load sekizai_tags %}
+{% load form_helper %}
+{% block app_body %}
+    <div class="container mt-3 mb-3">
+        <div class="row justify-content-center">
+            <div class="col col-md-8">
+                <form method="get" class="mb-4">
+                    {% render_form form horizontal=False %}
+                    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                </form>
+            </div>
+        </div>
+        {% if facets and has_query %}
+            {% include "froide_pressconference/pressconference_date_facet.html" %}
+            {% addtoblock "js" %}
+            {{ facet_data|json_script:"facet-data" }}
+        {% endaddtoblock %}
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col col-md-8">
+            {% if object_list %}
+                <ol class="list-group">
+                    {% for object in object_list %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <h3 class="fs-5">
+                                    <a href="{{ object.get_absolute_url }}" class="fw-bold">{{ object.title }}</a>
+                                </h3>
+                                {% if object.query_highlight %}
+                                    <div class="search-highlight">{{ object.query_highlight }}</div>
+                                {% else %}
+                                    {{ object.description|linebreaks }}
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+                {% if is_paginated %}
+                    {% include "pagination/pagination.html" with page_obj=page_obj %}
+                {% endif %}
+            {% else %}
+                {% trans "No results" %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock app_body %}

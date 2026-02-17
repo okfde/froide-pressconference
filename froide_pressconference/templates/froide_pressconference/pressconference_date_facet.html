@@ -1,0 +1,48 @@
+{% load i18n %}
+{% load static sekizai_tags %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10">
+        <div data-datefacetchart="">
+            <input class="form-control"
+                   type="text"
+                   value="{{ form.cleaned_data.q }}"
+                   data-additemtext="{% trans 'Press Enter to add <b>${value}</b>' %}"
+                   data-uniqueitemtext="{% trans 'This tag is already set.' %}"
+                   data-loading="{% trans 'Searching…' %}"
+                   data-noresults="{% trans 'No results' %}"
+                   data-nochoices="{% trans 'No results' %}"
+                   data-itemselect="{% trans 'Press to select' %}"
+                   data-fetchurl="{% url 'pressconference:pressconference-facet' %}"
+                   data-queryparam="q"
+                   placeholder="{% trans 'Enter something' %}" />
+                <div id="pressconference-facet-chart"></div>
+            </div>
+        </div>
+    </div>
+    <script type="importmap">
+  {
+    "imports": {
+        "d3-array": "{% static "froide_pressconference/js/vendor/d3-array.min.js" %}",
+        "d3-axis": "{% static "froide_pressconference/js/vendor/d3-axis.min.js" %}",
+        "d3-scale": "{% static "froide_pressconference/js/vendor/d3-scale.min.js" %}",
+        "d3-scale-chromatic": "{% static "froide_pressconference/js/vendor/d3-scale-chromatic.min.js" %}",
+        "d3-selection": "{% static "froide_pressconference/js/vendor/d3-selection.min.js" %}",
+        "d3-shape": "{% static "froide_pressconference/js/vendor/d3-shape.min.js" %}",
+        "d3-color": "{% static "froide_pressconference/js/vendor/d3-color.min.js" %}",
+        "d3-format": "{% static "froide_pressconference/js/vendor/d3-format.min.js" %}",
+        "d3-interpolate": "{% static "froide_pressconference/js/vendor/d3-interpolate.min.js" %}",
+        "d3-path": "{% static "froide_pressconference/js/vendor/d3-path.min.js" %}",
+        "d3-time": "{% static "froide_pressconference/js/vendor/d3-time.min.js" %}",
+        "d3-time-format": "{% static "froide_pressconference/js/vendor/d3-time-format.min.js" %}",
+        "internmap": "{% static "froide_pressconference/js/vendor/internmap.min.js" %}",
+        "choices.js": "{% static "froide_pressconference/js/vendor/choices.min.js" %}"
+    }
+  }
+    </script>
+    {% addtoblock "js" %}
+    <script type="module"
+            src="{% static "froide_pressconference/js/datefacet.js" %}"></script>
+{% endaddtoblock %}
+{% addtoblock "css" %}
+<link rel="stylesheet" href="{% static "css/tagautocomplete.css" %}" />
+{% endaddtoblock %}

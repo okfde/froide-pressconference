@@ -1,0 +1,50 @@
+{% load i18n %}
+<div id="section-{{ section.order }}" class="mb-4 border p-3">
+    {% for speech in section.speeches.all %}
+        {% if request.user.is_superuser %}
+            <a href="{% url 'admin:froide_pressconference_speech_change' speech.id %}"
+               class="btn btn-sm btn-outline-secondary float-end mb-2">
+                <span class="fa fa-edit"></span>
+            </a>
+        {% endif %}
+        {% if speech.is_sidenote %}
+            <p class="text-secondary{% if forloop.first %} mt-0{% endif %}">{{ speech.text|linebreaksbr }}</p>
+        {% elif speech.is_question %}
+            <h5{% if forloop.first %} class="mt-0"{% endif %}>{{ speech.label }}</h5>
+            <div>{{ speech.text|linebreaks }}</div>
+        {% else %}
+            {% if speech.speaker %}
+                <h5{% if forloop.first %} class="mt-0"{% endif %}>
+                    {{ speech.speaker.display_html }}
+                    {% with request_url=speech.make_request_url %}
+                        {% if request_url %}
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ request_url }}">{% trans "Make request" %}</a>
+                        {% endif %}
+                    {% endwith %}
+                </h5>
+            {% elif speech.label %}
+                <h5{% if forloop.first %} class="mt-0"{% endif %}>{{ speech.label }}</h5>
+            {% endif %}
+            <p>{{ speech.text|linebreaks }}</p>
+        {% endif %}
+    {% endfor %}
+    <button type="button"
+            class="btn btn-outline-secondary btn-sm "
+            data-bs-toggle="collapse"
+            aria-expanded="false"
+            aria-controls="comments-{{ section.id }}"
+            data-bs-target="#comments-{{ section.id }}"
+            data-scrollto="comments-{{ section.id }}"
+            data-scrolltoblock="end">
+        <span class="fa fa-comments"></span>
+        {% with count=section.comment_list|length %}
+            {% blocktranslate count count=count %}One comment{% plural %}{{ count }} comments{% endblocktranslate %}
+        {% endwith %}
+    </button>
+    <div id="comments-{{ section.id }}"
+         class="collapse {% if section.comment_list|length %}show{% endif %}">
+        <div class="py-4">
+            {% include "froide_comments/comments.html" with object=section comment_list=section.comment_list %}
+        </div>
+    </div>
+</div>

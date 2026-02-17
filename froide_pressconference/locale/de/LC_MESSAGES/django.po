@@ -1,0 +1,237 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-17 17:42+0100\n"
+"PO-Revision-Date: 2026-02-17 17:41+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.8\n"
+
+#: apps.py views.py
+msgid "Press Conferences"
+msgstr "Pressekonferenzen"
+
+#: cms_apps.py
+msgid "Press Conference CMS App"
+msgstr "Pressekonferenzen CMS App"
+
+#: filters.py
+msgid "date (oldest first)"
+msgstr "Datum (älteste zuerst)"
+
+#: filters.py
+msgid "date (newest first)"
+msgstr "Datum (neueste zuerst)"
+
+#: filters.py
+msgid "sort"
+msgstr "Sortierung"
+
+#: filters.py
+msgid "default sort"
+msgstr "Standardsortierung"
+
+#: models.py
+msgid "name"
+msgstr "Name"
+
+#: models.py
+msgid "slug"
+msgstr "URL-Kürzel"
+
+#: models.py
+msgid "Press Conference Category"
+msgstr "Pressekonferenzkategorie"
+
+#: models.py
+msgid "Press Conference Categories"
+msgstr "Pressekonferenzkategorien"
+
+#: models.py
+msgid "category"
+msgstr "Kategorie"
+
+#: models.py
+msgid "title"
+msgstr "Titel"
+
+#: models.py
+msgid "description"
+msgstr "Beschreibung"
+
+#: models.py
+msgid "source URL"
+msgstr "Quell-URL"
+
+#: models.py
+msgid "date"
+msgstr "Datum"
+
+#: models.py
+msgid "press conference"
+msgstr "Pressekonferenz"
+
+#: models.py
+msgid "press conferences"
+msgstr "Pressekonferenzen"
+
+#: models.py
+msgid "topic"
+msgstr "Thema"
+
+#: models.py
+msgid "topics"
+msgstr "Themen"
+
+#: models.py
+msgid "organization"
+msgstr "Organisation"
+
+#: models.py
+msgid "public body"
+msgstr "Behörde"
+
+#: models.py
+msgid "speaker"
+msgstr "Sprecher*in"
+
+#: models.py
+msgid "speakers"
+msgstr "Sprecher*innen"
+
+#: models.py
+msgid "order"
+msgstr "Reihenfolge"
+
+#: models.py
+msgid "section"
+msgstr "Fragenkomplex"
+
+#: models.py
+msgid "sections"
+msgstr "Fragenkomplexe"
+
+#: models.py
+#, python-format
+msgid "Section %(order)s in %(press_conference)s"
+msgstr "Fragenkomplex %(order)s in %(press_conference)s"
+
+#: models.py
+msgid "Sidenote"
+msgstr "Klammerbemerkung"
+
+#: models.py
+msgid "Question"
+msgstr "Frage"
+
+#: models.py
+msgid "Speech"
+msgstr "Rede"
+
+#: models.py
+msgid "Follow-up"
+msgstr "Nachfrage"
+
+#: models.py
+msgid "Interjection"
+msgstr "Zuruf"
+
+#: models.py
+msgid "kind"
+msgstr "Art"
+
+#: models.py
+msgid "label"
+msgstr "Aufschrift"
+
+#: models.py
+msgid "text"
+msgstr "Text"
+
+#: models.py
+msgid "speech"
+msgstr "Rede"
+
+#: models.py
+msgid "speeches"
+msgstr "Reden"
+
+#: models.py
+#, python-brace-format
+msgid ""
+"In a press conference on {date}, {speaker} said:\n"
+"\n"
+"“{text}”\n"
+"\n"
+msgstr ""
+"In der Pressekonferenz vom {date} sagte {speaker}:\n"
+"\n"
+"„{text}“\n"
+"\n"
+
+#: templates/froide_pressconference/pressconference_date_facet.html
+#, python-brace-format
+msgid "Press Enter to add <b>${value}</b>"
+msgstr "Drücken Sie Eingabe um <b>${value}</b> hinzuzufügen"
+
+#: templates/froide_pressconference/pressconference_date_facet.html
+msgid "This tag is already set."
+msgstr "Dieser Eintrag ist schon vorhanden."
+
+#: templates/froide_pressconference/pressconference_date_facet.html
+msgid "Searching…"
+msgstr "Suchen…"
+
+#: templates/froide_pressconference/pressconference_date_facet.html
+#: templates/froide_pressconference/pressconference_list.html
+msgid "No results"
+msgstr "Keine Ergebnisse"
+
+#: templates/froide_pressconference/pressconference_date_facet.html
+msgid "Press to select"
+msgstr "Auswählen"
+
+#: templates/froide_pressconference/pressconference_date_facet.html
+msgid "Enter something"
+msgstr "Etwas eingeben"
+
+#: templates/froide_pressconference/pressconference_list.html
+msgid "Search"
+msgstr "Suche"
+
+#: templates/froide_pressconference/section.html
+msgid "Make request"
+msgstr "Anfrage stellen"
+
+#: templates/froide_pressconference/section.html
+#, python-format
+msgid "One comment"
+msgid_plural "%(count)s comments"
+msgstr[0] "Ein Kommentar"
+msgstr[1] "%(count)s Kommentare"
+
+#: urls.py
+msgctxt "url part"
+msgid "search/"
+msgstr "suche/"
+
+#: urls.py
+msgctxt "url part"
+msgid "<slug:pc_slug>/"
+msgstr "<slug:pc_slug>/"
+
+#~ msgctxt "url part"
+#~ msgid "facet.json"
+#~ msgstr "facet.json"

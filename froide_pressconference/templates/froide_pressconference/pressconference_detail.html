@@ -1,0 +1,19 @@
+{% extends "froide_pressconference/base.html" %}
+{% load i18n %}
+{% load markup %}
+{% block app_body %}
+    <div class="container mt-3 mb-3">
+        <h1 class="mb-3">{{ press_conference.title }}</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-8">
+                <div class="card">
+                    <div class="card-body">{{ press_conference.description|linebreaksbr }}</div>
+                </div>
+                <hr />
+                {% for section in sections %}
+                    {% include "froide_pressconference/section.html" with section=section %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock app_body %}
