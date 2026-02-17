@@ -16,7 +16,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["froide_pressconference"]
+include = ["froide_pressconference*"]
 
 [tool.ruff]
 exclude = ["migrations", "build", "node_modules"]
