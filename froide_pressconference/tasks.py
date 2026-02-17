@@ -7,8 +7,6 @@ from django.core.files.base import ContentFile
 from celery import shared_task
 
 from .models import PressConference, PressConferenceCategory
-from .sources.cvd_loader import CVDLoader
-from .sources.cvd_scraper import download_cvd
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +34,8 @@ class CvdHandler:
 
 @shared_task
 def update_cvd_task():
+    from .sources.cvd_scraper import download_cvd
+
     pc_category = PressConferenceCategory.objects.get(slug="bpk")
     handler = CvdHandler(pc_category)
     username, password = settings.CVD_CREDENTIALS.split(",", 1)
@@ -50,6 +50,8 @@ def update_cvd_task():
 
 
 def parse_pressconference(pc):
+    from .sources.cvd_loader import CVDLoader
+
     with pc.source_file.open() as f:
         content = f.read()
     loader = CVDLoader(content)
