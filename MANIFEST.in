@@ -1,3 +1,4 @@
+include README.md LICENSE package.json
 recursive-include froide_pressconference/templates *.html *.txt
 recursive-include froide_pressconference/locale *.po
 recursive-include froide_pressconference/static *
