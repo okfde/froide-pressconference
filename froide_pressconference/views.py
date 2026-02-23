@@ -26,17 +26,6 @@ def get_base_breadcrumb():
     )
 
 
-# class PressConferenceListView(ListView, BreadcrumbView):
-#     model = PressConference
-#     template_name = "froide_pressconference/pressconference_list.html"
-#     paginate_by = 10
-#     ordering = ["-date"]
-
-#     def get_breadcrumbs(self, context):
-#         breadcrumbs = get_base_breadcrumb()
-#         return breadcrumbs
-
-
 class PressConferenceListView(BaseSearchView, BreadcrumbView):
     search_name = "pressconference"
     template_name = "froide_pressconference/pressconference_list.html"
