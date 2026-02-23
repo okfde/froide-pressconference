@@ -190,9 +190,10 @@ class Speech(models.Model):
             )
             date = date_format(self.section.press_conference.date)
             query = {
+                "ref": f"pressconference:{self.section.pk}@{self.section.press_conference.pk}",
                 "body": _(
-                    "In a press conference on {date}, {speaker} said:\n\n“{text}”\n\n"
-                ).format(date=date, speaker=self.speaker.name, text=self.text)
+                    "In a press conference on {date}, {speaker} said:\n\n“{text}”\n\n[…write request here…]"
+                ).format(date=date, speaker=self.speaker.name, text=self.text),
             }
             query = urlencode(query, quote_via=quote)
             return f"{path}?{query}"
