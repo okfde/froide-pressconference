@@ -10,11 +10,11 @@
         {% if speech.is_sidenote %}
             <p class="text-secondary{% if forloop.first %} mt-0{% endif %}">{{ speech.text|linebreaksbr }}</p>
         {% elif speech.is_question %}
-            <h5{% if forloop.first %} class="mt-0"{% endif %}>{{ speech.label }}</h5>
+            <h5 {% if forloop.first %}class="mt-0"{% endif %}>{{ speech.label }}</h5>
             <div>{{ speech.text|linebreaks }}</div>
         {% else %}
             {% if speech.speaker %}
-                <h5{% if forloop.first %} class="mt-0"{% endif %}>
+                <h5 {% if forloop.first %}class="mt-0"{% endif %}>
                     {{ speech.speaker.display_html }}
                     {% with request_url=speech.make_request_url %}
                         {% if request_url %}
@@ -23,7 +23,7 @@
                     {% endwith %}
                 </h5>
             {% elif speech.label %}
-                <h5{% if forloop.first %} class="mt-0"{% endif %}>{{ speech.label }}</h5>
+                <h5 {% if forloop.first %}class="mt-0"{% endif %}>{{ speech.label }}</h5>
             {% endif %}
             <p>{{ speech.text|linebreaks }}</p>
         {% endif %}
