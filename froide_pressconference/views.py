@@ -106,7 +106,7 @@ class PressConferenceDetailView(DetailView, BreadcrumbView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["sections"] = self.object.sections.all()
+        context["sections"] = self.object.sections.all().prefetch_related("foirequests")
         self.attach_comments(context["sections"])
         return context
 

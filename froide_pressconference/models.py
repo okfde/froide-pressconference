@@ -7,6 +7,7 @@ from django.utils.formats import date_format
 from django.utils.html import format_html, mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
 
@@ -41,6 +42,7 @@ class PressConference(models.Model):
         verbose_name = _("press conference")
         verbose_name_plural = _("press conferences")
         ordering = ["-date"]
+        get_latest_by = "date"
         constraints = [
             models.UniqueConstraint(
                 name="pressconference_unqique_slug",
@@ -116,7 +118,10 @@ class Section(models.Model):
         related_name="sections",
     )
     order = models.PositiveIntegerField(_("order"))
-    topics = models.ManyToManyField(Topic, verbose_name=_("topics"))
+    topics = models.ManyToManyField(Topic, blank=True, verbose_name=_("topics"))
+    foirequests = models.ManyToManyField(
+        FoiRequest, blank=True, verbose_name=_("related FOI requests")
+    )
 
     class Meta:
         verbose_name = _("section")

@@ -28,6 +28,14 @@
             <p>{{ speech.text|linebreaks }}</p>
         {% endif %}
     {% endfor %}
+    {% if section.foirequests.all %}
+        <hr />
+        <h6 class="mt-0">{% translate "Related FOI requests" %}</h6>
+        {% for foirequest in section.foirequests.all %}
+            {% include "foirequest/snippets/request_item_mini.html" with object=foirequest %}
+        {% endfor %}
+        <hr />
+    {% endif %}
     <button type="button"
             class="btn btn-outline-secondary btn-sm "
             data-bs-toggle="collapse"
