@@ -38,7 +38,8 @@ function setupChart(container, data, config) {
       noResultsText,
       searchResultLimit: 0,
       removeItemButton: true,
-      uniqueItemText
+      uniqueItemText,
+      callbackOnInit: () => update()
     })
 
     input.addEventListener('addItem', (e) => {
@@ -124,9 +125,6 @@ function setupChart(container, data, config) {
     .x((d) => x(yearToDate(d.key)))
     .y(yFunc)
 
-  const style = document.createElement('style')
-  document.head.appendChild(style)
-
   const pathElements = svg.append('g')
   const colorMap = new Map()
   const color = (d) => colorMap.get(d)
@@ -137,16 +135,13 @@ function setupChart(container, data, config) {
       if (!colorMap.has(d.term)) {
         colorMap.set(d.term, availableColors.shift())
       }
-    })
-    style.innerText = data.facets
-      .map(
-        (d) => `.choices__item[data-value="${d.term.replace(/"/g, '')}"] {
-            background-color: ${color(d.term)};
-        }`
+      const termNode = container.querySelector(
+        `.choices__item[data-value="${d.term.replace(/"/g, '\\"')}"]`
       )
-      .join('\n')
-
-    // Append a path for each series.
+      if (termNode) {
+        termNode.style.backgroundColor = color(d.term)
+      }
+    })
 
     const flatData = []
     data.facets.forEach((facet) => {
