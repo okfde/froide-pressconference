@@ -12,7 +12,7 @@ import {
   schemeTableau10
 } from 'd3'
 
-function setupChart(container, data) {
+function setupChart(container, data, config) {
   function setupSearch(input) {
     const addItemText = input.dataset.additemtext ?? ''
     const loadingText = input.dataset.loading ?? ''
@@ -21,7 +21,7 @@ function setupChart(container, data) {
     const itemSelectText = input.dataset.itemselect ?? ''
     const uniqueItemText = input.dataset.uniqueitemtext ?? ''
     const fetchUrl = input.dataset.fetchurl ?? ''
-    const queryParam = input.dataset.queryparam ?? 'q'
+    const queryParam = config.queryparam ?? 'q'
 
     new Choices(input, {
       addItemText(value) {
@@ -149,19 +149,38 @@ function setupChart(container, data) {
 
     // Append a path for each series.
     pathData = pathElements.selectAll('g').data(data.facets, function (d) {
-      console.log(d, d.term, this.id)
       return d ? d.term : this.id
     })
 
     const pathGroup = pathData.enter().append('g')
 
     pathGroup
-      .append('path')
+      .selectAll('circle')
+      .data((d) => d.date.map((x) => ({ term: d.term, ...x })))
+      .enter()
+      .append('circle')
+      .on('click', (_e, d) => {
+        if (config.searchUrl) {
+          const params = new URLSearchParams({
+            q: d.term,
+            [`${config.dateparam}_after`]: `${d.key}-01-01`,
+            [`${config.dateparam}_before`]: `${d.key}-12-31`
+          })
+          window.open(`${config.searchUrl}?${params.toString()}`)
+        }
+      })
       .attr('fill', (d) => color(d.term))
-      .attr('fill-opacity', 0.3)
-      .attr('d', (d) => chartArea(d.date))
-      .append('title')
-      .text((d) => d.term)
+      // .attr("stroke-width", 2)
+      // .attr("fill", "transparent")
+      .attr('cx', (d) => x(yearToDate(d.key)))
+      .attr('cy', yFunc)
+      .attr('r', 5)
+      .attr('style', 'cursor:pointer')
+      .attr('title', (d) => d.term)
+      .exit()
+      .on('click', null)
+      .remove()
+
     pathGroup
       .append('path')
       .attr('stroke', (d) => color(d.term))
@@ -173,17 +192,12 @@ function setupChart(container, data) {
       .text((d) => d.term)
 
     pathGroup
-      .selectAll('circle')
-      .data((d) => d.date.map((x) => ({ term: d.term, ...x })))
-      .enter()
-      .append('circle')
+      .append('path')
       .attr('fill', (d) => color(d.term))
-      // .attr("stroke-width", 2)
-      // .attr("fill", "transparent")
-      .attr('cx', (d) => x(yearToDate(d.key)))
-      .attr('cy', yFunc)
-      .attr('r', 5)
-      .attr('title', (d) => d.term)
+      .attr('fill-opacity', 0.3)
+      .attr('d', (d) => chartArea(d.date))
+      .append('title')
+      .text((d) => d.term)
 
     pathData.exit().remove().remove()
   }
@@ -199,10 +213,14 @@ function setupChart(container, data) {
 
 // Append the SVG element.
 document.addEventListener('DOMContentLoaded', () => {
-  const data = JSON.parse(document.getElementById('facet-data').textContent)
   const facetCharts = document.querySelectorAll('[data-datefacetchart]')
 
   facetCharts.forEach((chart) => {
-    setupChart(chart, data)
+    const data = JSON.parse(chart.querySelector('script').textContent)
+    setupChart(chart, data, {
+      searchUrl: chart.dataset.searchurl,
+      queryparam: chart.dataset.queryparam,
+      dateparam: chart.dataset.dateparam,
+    })
   })
 })

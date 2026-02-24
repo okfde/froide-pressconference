@@ -1,23 +1,24 @@
 {% load i18n %}
 {% load sekizai_tags static %}
-<div class="row justify-content-center">
-    <div class="col-12 col-md-10">
-        <div data-datefacetchart="">
-            <input class="form-control"
-                   type="text"
-                   value="{{ form.cleaned_data.q }}"
-                   data-additemtext="{% trans 'Press Enter to add <b>${value}</b>' %}"
-                   data-uniqueitemtext="{% trans 'This tag is already set.' %}"
-                   data-loading="{% trans 'Searching…' %}"
-                   data-noresults="{% trans 'No results' %}"
-                   data-nochoices="{% trans 'No results' %}"
-                   data-itemselect="{% trans 'Press to select' %}"
-                   data-fetchurl="{% url 'pressconference:pressconference-facet' %}"
-                   data-queryparam="q"
-                   placeholder="{% trans 'Enter something' %}" />
-                <div id="pressconference-facet-chart"></div>
-            </div>
-        </div>
+<div data-datefacetchart=""
+     data-queryparam="q"
+     data-dateparam="date"
+     data-searchurl="{% url "pressconference:pressconference-list" %}">
+    {{ facet_data|json_script:facet_data_id }}
+    {% if show_input %}
+        <input class="form-control"
+               type="text"
+               value="{{ terms }}"
+               data-additemtext="{% trans 'Press Enter to add <b>${value}</b>' %}"
+               data-uniqueitemtext="{% trans 'This tag is already set.' %}"
+               data-loading="{% trans 'Searching…' %}"
+               data-noresults="{% trans 'No results' %}"
+               data-nochoices="{% trans 'No results' %}"
+               data-itemselect="{% trans 'Press to select' %}"
+               data-fetchurl="{% url 'pressconference:pressconference-facet' %}"
+               placeholder="{% trans 'Enter something' %}" />
+        {% endif %}
+        <div id="pressconference-facet-chart"></div>
     </div>
     {% addtoblock "js" %}
     {% include "_frontend.html" with entry_point="datefacet.js" %}

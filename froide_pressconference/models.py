@@ -7,6 +7,8 @@ from django.utils.formats import date_format
 from django.utils.html import format_html, mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from cms.models.pluginmodel import CMSPlugin
+
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
 
@@ -198,3 +200,20 @@ class Speech(models.Model):
             query = urlencode(query, quote_via=quote)
             return f"{path}?{query}"
         return ""
+
+
+class PressConferenceFacetsCMSPlugin(CMSPlugin):
+    """
+    CMS Plugin for displaying search terms
+    """
+
+    terms = models.CharField(max_length=255)
+
+    def __str__(self):
+        return _("Facet graph for: %s") % self.terms
+
+    def get_terms(self):
+        return [t.strip() for t in self.terms.split(",")]
+
+    def get_terms_joined(self):
+        return ",".join(self.get_terms())

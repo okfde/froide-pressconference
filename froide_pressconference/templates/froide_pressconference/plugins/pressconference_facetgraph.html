@@ -1,0 +1,5 @@
+{% load sekizai_tags %}
+{% include "froide_pressconference/pressconference_date_facet.html" %}
+{% addtoblock "js" %}
+{{ facet_data|json_script:"facet-data" }}
+{% endaddtoblock %}

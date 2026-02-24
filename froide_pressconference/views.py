@@ -26,6 +26,34 @@ def get_base_breadcrumb():
     )
 
 
+def get_facet_data(terms: list[str], facet_list):
+    date_facet_totals = list(
+        PressConference.objects.all()
+        .values_list("date__year")
+        .annotate(year_count=Count("*"))
+        .order_by("date__year")
+    )
+
+    facet_map_list = [
+        {d["key_as_string"]: d["doc_count"] for d in facet["date"]["buckets"]}
+        for facet in facet_list
+    ]
+
+    return {
+        "baseline": date_facet_totals,
+        "facets": [
+            {
+                "term": term,
+                "date": [
+                    {"key": str(year), "count": facet_map.get(str(year), 0)}
+                    for year, _year_count in date_facet_totals
+                ],
+            }
+            for term, facet_map in zip(terms, facet_map_list, strict=True)
+        ],
+    }
+
+
 class PressConferenceListView(BaseSearchView, BreadcrumbView):
     search_name = "pressconference"
     template_name = "froide_pressconference/pressconference_list.html"
@@ -45,31 +73,12 @@ class PressConferenceListView(BaseSearchView, BreadcrumbView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        data = context["facets"]
-        date_facet_totals = list(
-            PressConference.objects.all()
-            .values_list("date__year")
-            .annotate(year_count=Count("*"))
-            .order_by("date__year")
+        facets = context["facets"]
+
+        context["facet_data"] = get_facet_data(
+            [context["form"].cleaned_data.get("q", "")], [facets]
         )
-
-        facet_data_map = {
-            d["key_as_string"]: d["doc_count"] for d in data["date"]["buckets"]
-        }
-
-        data = {
-            "baseline": date_facet_totals,
-            "facets": [
-                {
-                    "term": context["form"].cleaned_data.get("q", ""),
-                    "date": [
-                        {"key": str(year), "count": facet_data_map.get(str(year), 0)}
-                        for year, _year_count in date_facet_totals
-                    ],
-                }
-            ],
-        }
-        context["facet_data"] = data
+        context["facet_data_id"] = "facet-data"
         return context
 
     def render_to_response(self, context, **response_kwargs):
