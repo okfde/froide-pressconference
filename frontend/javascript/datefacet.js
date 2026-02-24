@@ -128,7 +128,6 @@ function setupChart(container, data, config) {
   document.head.appendChild(style)
 
   const pathElements = svg.append('g')
-  let pathData = pathElements.selectAll('g')
   const colorMap = new Map()
   const color = (d) => colorMap.get(d)
   const availableColors = [...schemeTableau10]
@@ -148,15 +147,51 @@ function setupChart(container, data, config) {
       .join('\n')
 
     // Append a path for each series.
-    pathData = pathElements.selectAll('g').data(data.facets, function (d) {
-      return d ? d.term : this.id
+
+    const flatData = []
+    data.facets.forEach((facet) => {
+      facet.date.forEach((date) => {
+        flatData.push({
+          term: facet.term,
+          ...date
+        })
+      })
     })
+    const idFunc = function (d) {
+      return d ? d.term : this.id
+    }
 
-    const pathGroup = pathData.enter().append('g')
+    const fillPaths = pathElements
+      .selectAll('path.fill')
+      .data(data.facets, idFunc)
+    fillPaths
+      .enter()
+      .append('path')
+      .attr('class', 'fill')
+      .attr('fill', (d) => color(d.term))
+      .attr('fill-opacity', 0.3)
+      .attr('d', (d) => chartArea(d.date))
+      .append('title')
+      .text((d) => d.term)
+    fillPaths.exit().remove()
 
-    pathGroup
-      .selectAll('circle')
-      .data((d) => d.date.map((x) => ({ term: d.term, ...x })))
+    const strokePaths = pathElements
+      .selectAll('path.stroke')
+      .data(data.facets, idFunc)
+    strokePaths
+      .enter()
+      .append('path')
+      .attr('class', 'stroke')
+      .attr('stroke', (d) => color(d.term))
+      .attr('stroke-width', 4)
+      .attr('fill', 'transparent')
+      .attr('d', (d) => chartLine(d.date))
+      .append('title')
+      .text((d) => d.term)
+    strokePaths.exit().remove()
+
+    const dots = pathElements.selectAll('circle').data(flatData, idFunc)
+    dots
       .enter()
       .append('circle')
       .on('click', (_e, d) => {
@@ -177,29 +212,7 @@ function setupChart(container, data, config) {
       .attr('r', 5)
       .attr('style', 'cursor:pointer')
       .attr('title', (d) => d.term)
-      .exit()
-      .on('click', null)
-      .remove()
-
-    pathGroup
-      .append('path')
-      .attr('stroke', (d) => color(d.term))
-      .attr('stroke-width', 4)
-      .attr('fill', 'transparent')
-      // .attr("fill-opacity", 0.3)
-      .attr('d', (d) => chartLine(d.date))
-      .append('title')
-      .text((d) => d.term)
-
-    pathGroup
-      .append('path')
-      .attr('fill', (d) => color(d.term))
-      .attr('fill-opacity', 0.3)
-      .attr('d', (d) => chartArea(d.date))
-      .append('title')
-      .text((d) => d.term)
-
-    pathData.exit().remove().remove()
+    dots.exit().on('click', null).remove()
   }
 
   update()
@@ -220,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupChart(chart, data, {
       searchUrl: chart.dataset.searchurl,
       queryparam: chart.dataset.queryparam,
-      dateparam: chart.dataset.dateparam,
+      dateparam: chart.dataset.dateparam
     })
   })
 })
