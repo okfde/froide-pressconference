@@ -119,7 +119,7 @@ async def download_cvd(username, password, handler, chrome_binary_path=None):
     if chrome_binary_path:
         options.binary_location = chrome_binary_path
 
-    options.headless = False
+    options.headless = True
     options.block_notifications = True
     options.block_popups = True
 
