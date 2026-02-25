@@ -1,7 +1,11 @@
+from froide.foirequest.models import FoiRequest
+
 from .models import PressConference, Section
 
+FOIREQUEST_TAGS = "Regierungspressekonferenz"
 
-def create_link(sender, **kwargs):
+
+def create_link(sender: FoiRequest, **kwargs):
     reference = kwargs.get("reference")
     if not reference:
         reference = sender.reference
@@ -38,3 +42,4 @@ def create_link(sender, **kwargs):
         return
 
     section.foirequests.add(sender)
+    sender.tags.add(FOIREQUEST_TAGS)
