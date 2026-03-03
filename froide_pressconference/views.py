@@ -67,6 +67,9 @@ class PressConferenceListView(BaseSearchView, BreadcrumbView):
     }
     api = False
 
+    def get_queryset(self):
+        return super().get_queryset().exclude(slug="")
+
     def get_breadcrumbs(self, context):
         breadcrumbs = get_base_breadcrumb()
         return breadcrumbs
@@ -97,6 +100,7 @@ class PressConferenceDetailView(DetailView, BreadcrumbView):
         return (
             super()
             .get_queryset()
+            .exclude(slug="")
             .prefetch_related(
                 "sections", "sections__speeches", "sections__speeches__speaker"
             )
