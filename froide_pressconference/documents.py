@@ -35,7 +35,12 @@ class PressConferenceDocument(Document):
         model = PressConference
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related("sections", "sections__speeches")
+        return (
+            super()
+            .get_queryset()
+            .exclude(slug="")
+            .prefetch_related("sections", "sections__speeches")
+        )
 
     def prepare_speakers(self, obj):
         return list(
