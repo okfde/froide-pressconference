@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from .models import (
     PressConference,
@@ -24,6 +25,14 @@ class PressConferenceAdmin(admin.ModelAdmin):
     search_fields = ("title", "description")
     date_hierarchy = "date"
     prepopulated_fields = {"slug": ("title",)}
+    actions = ["parse_press_conference"]
+
+    @admin.action(description=_("Parse press conference"))
+    def parse_press_conference(self, request, queryset):
+        from .tasks import parse_pressconference_task
+
+        for pc in queryset:
+            parse_pressconference_task.delay(pc.id)
 
 
 @admin.register(Topic)
