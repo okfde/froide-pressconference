@@ -264,9 +264,15 @@ class CVDLoader:
                 return speaker
             if match := function_speaker.re_match(speaker_name):
                 function, name = match.groups()
+                pb = None
+                if (
+                    pc.category
+                    and pc.category.host
+                    and speaker_name in pc.category.host.other_names
+                ):
+                    pb = pc.category.host
                 speaker, _created = Speaker.objects.get_or_create(
-                    name=name.strip(),
-                    title=function.strip(),
+                    name=name.strip(), title=function.strip(), publicbody=pb
                 )
                 return speaker
             speaker = Speaker.objects.filter(
