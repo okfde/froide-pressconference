@@ -16,6 +16,9 @@ from froide.publicbody.models import PublicBody
 class PressConferenceCategory(models.Model):
     name = models.CharField(_("name"), max_length=255)
     slug = models.SlugField(_("slug"), unique=True)
+    host = models.ForeignKey(
+        PublicBody, null=True, blank=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
         verbose_name = _("Press Conference Category")
