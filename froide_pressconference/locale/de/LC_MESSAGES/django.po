@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-17 17:42+0100\n"
-"PO-Revision-Date: 2026-02-17 17:41+0100\n"
+"POT-Creation-Date: 2026-04-01 16:59+0200\n"
+"PO-Revision-Date: 2026-04-01 17:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -17,217 +17,248 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
-#: apps.py views.py
+#: froide_pressconference/admin.py
+msgid "Parse press conference"
+msgstr "Pressekonferenz parsen"
+
+#: froide_pressconference/apps.py froide_pressconference/views.py
 msgid "Press Conferences"
 msgstr "Pressekonferenzen"
 
-#: cms_apps.py
+#: froide_pressconference/cms_apps.py
 msgid "Press Conference CMS App"
 msgstr "Pressekonferenzen CMS App"
 
-#: filters.py
+#: froide_pressconference/cms_plugins.py
+msgid "Press Conference"
+msgstr "Pressekonferenz"
+
+#: froide_pressconference/cms_plugins.py
+msgid "Press Conference List"
+msgstr "Pressekonferenz-Liste"
+
+#: froide_pressconference/cms_plugins.py
+msgid "Press Conference Facet Graph"
+msgstr "Pressekonferenzen Facetten-Graph"
+
+#: froide_pressconference/filters.py
 msgid "date (oldest first)"
 msgstr "Datum (älteste zuerst)"
 
-#: filters.py
+#: froide_pressconference/filters.py
 msgid "date (newest first)"
 msgstr "Datum (neueste zuerst)"
 
-#: filters.py
+#: froide_pressconference/filters.py
 msgid "sort"
 msgstr "Sortierung"
 
-#: filters.py
+#: froide_pressconference/filters.py
 msgid "default sort"
 msgstr "Standardsortierung"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "name"
 msgstr "Name"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "slug"
 msgstr "URL-Kürzel"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Press Conference Category"
 msgstr "Pressekonferenzkategorie"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Press Conference Categories"
 msgstr "Pressekonferenzkategorien"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "category"
 msgstr "Kategorie"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "title"
 msgstr "Titel"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "description"
 msgstr "Beschreibung"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "source URL"
 msgstr "Quell-URL"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "date"
 msgstr "Datum"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "press conference"
 msgstr "Pressekonferenz"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "press conferences"
 msgstr "Pressekonferenzen"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "topic"
 msgstr "Thema"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "topics"
 msgstr "Themen"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "organization"
 msgstr "Organisation"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "public body"
 msgstr "Behörde"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "speaker"
 msgstr "Sprecher*in"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "speakers"
 msgstr "Sprecher*innen"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "order"
 msgstr "Reihenfolge"
 
-#: models.py
+#: froide_pressconference/models.py
+msgid "related FOI requests"
+msgstr "zugehörige Anfragen"
+
+#: froide_pressconference/models.py
 msgid "section"
 msgstr "Fragenkomplex"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "sections"
 msgstr "Fragenkomplexe"
 
-#: models.py
+#: froide_pressconference/models.py
 #, python-format
 msgid "Section %(order)s in %(press_conference)s"
 msgstr "Fragenkomplex %(order)s in %(press_conference)s"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Sidenote"
 msgstr "Klammerbemerkung"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Question"
 msgstr "Frage"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Speech"
 msgstr "Rede"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Follow-up"
 msgstr "Nachfrage"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "Interjection"
 msgstr "Zuruf"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "kind"
 msgstr "Art"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "label"
 msgstr "Aufschrift"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "text"
 msgstr "Text"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "speech"
 msgstr "Rede"
 
-#: models.py
+#: froide_pressconference/models.py
 msgid "speeches"
 msgstr "Reden"
 
-#: models.py
+#: froide_pressconference/models.py
 #, python-brace-format
 msgid ""
 "In a press conference on {date}, {speaker} said:\n"
 "\n"
 "“{text}”\n"
 "\n"
+"[…write request here…]"
 msgstr ""
 "In der Pressekonferenz vom {date} sagte {speaker}:\n"
 "\n"
 "„{text}“\n"
 "\n"
+"[…Frage hier formulieren…]"
 
-#: templates/froide_pressconference/pressconference_date_facet.html
+#: froide_pressconference/models.py
+#, python-format
+msgid "Facet graph for: %s"
+msgstr "Facetten-Graph für: %s"
+
+#: froide_pressconference/templates/froide_pressconference/pressconference_date_facet.html
 #, python-brace-format
 msgid "Press Enter to add <b>${value}</b>"
 msgstr "Drücken Sie Eingabe um <b>${value}</b> hinzuzufügen"
 
-#: templates/froide_pressconference/pressconference_date_facet.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_date_facet.html
 msgid "This tag is already set."
 msgstr "Dieser Eintrag ist schon vorhanden."
 
-#: templates/froide_pressconference/pressconference_date_facet.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_date_facet.html
 msgid "Searching…"
 msgstr "Suchen…"
 
-#: templates/froide_pressconference/pressconference_date_facet.html
-#: templates/froide_pressconference/pressconference_list.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_date_facet.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_list.html
 msgid "No results"
 msgstr "Keine Ergebnisse"
 
-#: templates/froide_pressconference/pressconference_date_facet.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_date_facet.html
 msgid "Press to select"
 msgstr "Auswählen"
 
-#: templates/froide_pressconference/pressconference_date_facet.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_date_facet.html
 msgid "Enter something"
 msgstr "Etwas eingeben"
 
-#: templates/froide_pressconference/pressconference_list.html
+#: froide_pressconference/templates/froide_pressconference/pressconference_list.html
 msgid "Search"
 msgstr "Suche"
 
-#: templates/froide_pressconference/section.html
+#: froide_pressconference/templates/froide_pressconference/section.html
 msgid "Make request"
 msgstr "Anfrage stellen"
 
-#: templates/froide_pressconference/section.html
+#: froide_pressconference/templates/froide_pressconference/section.html
+msgid "Related FOI requests"
+msgstr "Zugehörige Anfragen"
+
+#: froide_pressconference/templates/froide_pressconference/section.html
 #, python-format
 msgid "One comment"
 msgid_plural "%(count)s comments"
 msgstr[0] "Ein Kommentar"
 msgstr[1] "%(count)s Kommentare"
 
-#: urls.py
+#: froide_pressconference/urls.py
 msgctxt "url part"
 msgid "search/"
 msgstr "suche/"
 
-#: urls.py
+#: froide_pressconference/urls.py
 msgctxt "url part"
 msgid "<slug:pc_slug>/"
 msgstr "<slug:pc_slug>/"
