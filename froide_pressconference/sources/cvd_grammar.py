@@ -58,10 +58,12 @@ postfixes = [f"{x}in" for x in ("`", "’", "'")]
 
 function_re = re_add_in_group(re_make_groups(function_prefixes, postfixes))
 
+title_list = ["Dr.", "Prof."]
+
 known_name_re = re_add_in_group(
     function_re
     + "|"
-    + re_make_groups(["Dr.", "Prof.", "Vorsitzende", "Vorsitzender", "Vors."])
+    + re_make_groups(title_list + ["Vorsitzende", "Vorsitzender", "Vors."])
 )
 
 
@@ -89,7 +91,7 @@ question_re = r"\w*frage|Zusatzfrage|Zusatz"
 question = (Regex(question_re, re.I) + sb).set_parse_action(QuestionItem)
 question_prefix = (Regex(question_re, re.I) + colon).set_parse_action(QuestionItem)
 ministry_speaker = Regex(
-    r"([\w-]+) \(([A-Z]\w{,6})\)",
+    r"(?:((?:Dr|Prof)\.) )?([\w-]+) \(([A-Z]\w{,6})\)",
 ).set_name("ministry speaker")
 function_speaker = Regex(
     r"(%s)([A-ZÄÖÜ][\w-]+)" % function_re,

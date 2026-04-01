@@ -256,10 +256,11 @@ class CVDLoader:
 
         def parse_speaker(speaker_name):
             if match := ministry_speaker.re_match(speaker_name):
-                name, ministry_abbr = match.groups()
+                title, name, ministry_abbr = match.groups()
+                title = title or ""
                 pb = get_publicbody_from_abbr(ministry_abbr)
                 speaker, _created = Speaker.objects.get_or_create(
-                    name=name, publicbody=pb
+                    title=title, name=name, publicbody=pb
                 )
                 return speaker
             if match := function_speaker.re_match(speaker_name):
