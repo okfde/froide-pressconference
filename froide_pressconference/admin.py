@@ -16,6 +16,7 @@ class PressConferenceCategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "slug")
     search_fields = ("name", "slug")
     prepopulated_fields = {"slug": ("name",)}
+    raw_id_fields = ("host",)
 
 
 @admin.register(PressConference)
