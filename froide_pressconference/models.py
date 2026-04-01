@@ -174,7 +174,7 @@ class Speech(models.Model):
     class Meta:
         verbose_name = _("speech")
         verbose_name_plural = _("speeches")
-        ordering = ["order"]
+        ordering = ["order", "id"]
 
     def __str__(self):
         return self.text[:50]
