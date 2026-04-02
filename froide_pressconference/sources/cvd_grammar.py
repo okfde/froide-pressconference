@@ -87,7 +87,7 @@ sidenote = (
     | (Regex(r"Zuruf(?: [^: ]+)?: ?[^\n]+") + sb)
 ).set_parse_action(SideNoteItem)
 
-question_re = r"\w*frage|Zusatzfrage|Zusatz"
+question_re = r"\w*frage|Zusatzfrage|Zusatz|Zuruf"
 question = (Regex(question_re, re.I) + sb).set_parse_action(QuestionItem)
 question_prefix = (Regex(question_re, re.I) + colon).set_parse_action(QuestionItem)
 ministry_speaker = Regex(
