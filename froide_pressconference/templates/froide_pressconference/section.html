@@ -1,9 +1,13 @@
 {% load i18n %}
 <div id="section-{{ section.order }}" class="mb-4 border p-3">
+    <a href="#section-{{ section.order }}" class="float-end">
+        <span class="visually-hidden">Link to section</span>
+        <span class="fa fa-link"></span>
+    </a>
     {% for speech in section.speeches.all %}
         {% if request.user.is_superuser %}
             <a href="{% url 'admin:froide_pressconference_speech_change' speech.id %}"
-               class="btn btn-sm btn-outline-secondary float-end mb-2">
+               class="float-end mb-2 me-2">
                 <span class="fa fa-edit"></span>
             </a>
         {% endif %}
