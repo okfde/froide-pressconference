@@ -58,6 +58,7 @@ class SectionAdmin(admin.ModelAdmin):
     search_fields = ("press_conference__title",)
     ordering = ("press_conference", "order")
     filter_horizontal = ("topics",)
+    raw_id_fields = ("press_conference", "foirequests")
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related("press_conference")
