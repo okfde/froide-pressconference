@@ -23,7 +23,7 @@ function setupChart(container, data, config) {
     const fetchUrl = input.dataset.fetchurl ?? ''
     const queryParam = config.queryparam ?? 'q'
 
-    new Choices(input, {
+    const choices = new Choices(input, {
       addItemText(value) {
         return addItemText.replace('${value}', value)
       },
@@ -51,8 +51,10 @@ function setupChart(container, data, config) {
       const value = e.detail.value
       data.facets = data.facets.filter((d) => d.term !== value)
       const color = colorMap.get(value)
-      availableColors.unshift(color)
-      colorMap.delete(value)
+      if (color !== undefined) {
+        availableColors.unshift(color)
+        colorMap.delete(value)
+      }
       update()
     })
 
@@ -66,6 +68,9 @@ function setupChart(container, data, config) {
         .then((response) => response.json())
         .then((response) => {
           console.log(response)
+          if (!choices.getValue(true).includes(term)) {
+            return
+          }
           data.facets = [...data.facets, ...response.facets]
           update()
         })
