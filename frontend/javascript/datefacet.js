@@ -4,7 +4,7 @@ import {
   axisBottom,
   axisLeft,
   create,
-  curveCatmullRom,
+  curveBumpX,
   extent,
   line,
   scaleLinear,
@@ -115,13 +115,13 @@ function setupChart(container, data, config) {
   const yFunc = (d) => y((d.count / baselineMapping.get(+d.key)) * 100)
 
   const chartArea = area()
-    .curve(curveCatmullRom)
+    .curve(curveBumpX)
     .x((d) => x(yearToDate(d.key)))
     .y0(y(0))
     .y1(yFunc)
 
   const chartLine = line()
-    .curve(curveCatmullRom)
+    .curve(curveBumpX)
     .x((d) => x(yearToDate(d.key)))
     .y(yFunc)
 
