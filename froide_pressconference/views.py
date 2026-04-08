@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
+from django.db.models.functions import TruncMonth, TruncWeek, TruncYear
 from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -26,13 +27,31 @@ def get_base_breadcrumb():
     )
 
 
-def get_facet_data(terms: list[str], facet_list):
+def get_facet_data(
+    terms: list[str], facet_list, interval="year", start_date=None, end_date=None
+):
+    annotation_func = TruncYear
+    if interval == "month":
+        annotation_func = TruncMonth
+    elif interval == "week":
+        annotation_func = TruncWeek
+
+    base_qs = PressConference.objects.all()
+    if start_date:
+        base_qs = base_qs.filter(date__gte=start_date)
+    if end_date:
+        base_qs = base_qs.filter(date__lte=end_date)
+
     date_facet_totals = list(
-        PressConference.objects.all()
-        .values_list("date__year")
+        base_qs.annotate(date_trunc=annotation_func("date"))
+        .values_list("date_trunc")
         .annotate(year_count=Count("*"))
-        .order_by("date__year")
+        .order_by("date_trunc")
     )
+    date_facet_totals = [
+        (date_trunc.strftime("%Y-%m-%d"), year_count)
+        for date_trunc, year_count in date_facet_totals
+    ]
 
     facet_map_list = [
         {d["key_as_string"]: d["doc_count"] for d in facet["date"]["buckets"]}
@@ -45,8 +64,8 @@ def get_facet_data(terms: list[str], facet_list):
             {
                 "term": term,
                 "date": [
-                    {"key": str(year), "count": facet_map.get(str(year), 0)}
-                    for year, _year_count in date_facet_totals
+                    {"key": date_trunc, "count": facet_map.get(date_trunc, 0)}
+                    for date_trunc, _year_count in date_facet_totals
                 ],
             }
             for term, facet_map in zip(terms, facet_map_list, strict=True)
@@ -74,9 +93,14 @@ class PressConferenceListView(BaseSearchView, BreadcrumbView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         facets = context["facets"]
-
+        cleaned_data = context["form"].cleaned_data
+        context["facet_interval"] = cleaned_data.get("facet_interval", "year") or "year"
         context["facet_data"] = get_facet_data(
-            [context["form"].cleaned_data.get("q", "")], [facets]
+            [cleaned_data.get("q", "")],
+            [facets],
+            interval=context["facet_interval"],
+            start_date=cleaned_data.get("date_after"),
+            end_date=cleaned_data.get("date_before"),
         )
         context["facet_data_id"] = "facet-data"
         return context

@@ -37,19 +37,37 @@ class PressConferenceFacetGraphPlugin(CMSPluginBase):
         context = super().render(context, instance, placeholder)
         terms = instance.get_terms()
         context["facet_data"] = get_facet_data(
-            terms, [self.get_facet(term) for term in terms]
+            terms,
+            [
+                self.get_facet(
+                    term,
+                    interval=instance.interval,
+                    start_date=instance.start_date,
+                    end_date=instance.end_date,
+                )
+                for term in terms
+            ],
+            interval=instance.interval,
+            start_date=instance.start_date,
+            end_date=instance.end_date,
         )
         context["facet_data_id"] = f"facet-data-{instance.id}"
         context["terms"] = instance.get_terms_joined()
+        context["facet_interval"] = instance.interval
         context["show_input"] = True
         return context
 
-    def get_facet(self, term):
+    def get_facet(self, term, interval="year", start_date=None, end_date=None):
         s = PressConferenceDocument.search()
         sqs = SearchQuerySetWrapper(s, PressConference)
 
         filtered = PressConferenceFilterSet(
-            {"q": term},
+            {
+                "q": term,
+                "facet_interval": interval,
+                "date_after": start_date.strftime("%Y-%m-%d") if start_date else None,
+                "date_before": end_date.strftime("%Y-%m-%d") if end_date else None,
+            },
             view=PressConferenceListView,
             queryset=sqs,
         )

@@ -1,3 +1,4 @@
+from django import forms
 from django.utils.translation import gettext_lazy as _
 
 import django_filters
@@ -35,7 +36,19 @@ class PressConferenceFilterSet(BaseSearchFilterSet):
         widget=BootstrapSelect,
         method="add_sort",
     )
+    facet_interval = django_filters.ChoiceFilter(
+        required=False,
+        method="filter_facet_interval",
+        widget=forms.HiddenInput,
+        choices=(
+            ("year", _("Year")),
+            ("month", _("Month")),
+            ("week", _("Week")),
+        ),
+    )
+
     query_fields = ["content", "description"]
+    date_facet_format = "yyyy-MM-dd"
 
     class Meta:
         model = PressConference
@@ -44,17 +57,16 @@ class PressConferenceFilterSet(BaseSearchFilterSet):
             "date",
         ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form.initial["facet_interval"] = "year"
+
     def filter_queryset(self, queryset):
         qs = super().filter_queryset(queryset)
-        facet_config = self.view.facet_config
-        for key, facet in facet_config.items():
-            if facet["type"] == "term":
-                qs = qs.add_aggregation([key])
-            elif facet["type"] == "date_histogram":
-                facet_kwargs = {
-                    k: v for k, v in facet.items() if k in ("interval", "format")
-                }
-                qs = qs.add_date_histogram(key, **facet_kwargs)
+        if not self.data.get("facet_interval"):
+            qs = qs.add_date_histogram(
+                "date", interval="year", format=self.date_facet_format
+            )
         return qs
 
     def filter_date_range(self, qs, name, value):
@@ -70,3 +82,8 @@ class PressConferenceFilterSet(BaseSearchFilterSet):
         if value:
             return qs.add_sort(value)
         return qs
+
+    def filter_facet_interval(self, qs, name, value):
+        return qs.add_date_histogram(
+            "date", interval=value, format=self.date_facet_format
+        )

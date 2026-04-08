@@ -18,7 +18,7 @@
         {% if facets and has_query %}
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10">
-                    {% include "froide_pressconference/pressconference_date_facet.html" with terms=form.cleaned_data.q %}
+                    {% include "froide_pressconference/pressconference_date_facet.html" with terms=form.cleaned_data.q facet_interval=facet_interval %}
                 </div>
             </div>
         {% endif %}

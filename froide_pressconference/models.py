@@ -211,6 +211,20 @@ class PressConferenceFacetsCMSPlugin(CMSPlugin):
     """
 
     terms = models.CharField(max_length=255)
+    interval = models.CharField(
+        max_length=50,
+        default="year",
+        choices=(
+            ("year", _("Year")),
+            (
+                "month",
+                _("Month"),
+            ),
+            ("week", _("Week")),
+        ),
+    )
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return _("Facet graph for: %s") % self.terms

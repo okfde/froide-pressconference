@@ -3,6 +3,7 @@
 <div data-datefacetchart=""
      data-queryparam="q"
      data-dateparam="date"
+     data-interval="{{ facet_interval }}"
      data-searchurl="{% url "pressconference:pressconference-list" %}">
     {{ facet_data|json_script:facet_data_id }}
     {% if show_input %}

@@ -90,11 +90,11 @@ function setupChart(container, data, config) {
   const marginBottom = 30
   const marginLeft = 40
 
-  const yearToDate = (d) => new Date(`${d}-01-01`)
+  const toDate = (d) => new Date(d)
 
   // Declare the x (horizontal position) scale.
   const x = scaleUtc()
-    .domain(extent(baseline, (d) => yearToDate(d[0])))
+    .domain(extent(baseline, (d) => toDate(d[0])))
     .range([marginLeft, width - marginRight])
 
   // Declare the y (vertical position) scale.
@@ -117,17 +117,17 @@ function setupChart(container, data, config) {
     .attr('transform', `translate(${marginLeft},0)`)
     .call(axisLeft(y).tickFormat((d) => d + '%'))
 
-  const yFunc = (d) => y((d.count / baselineMapping.get(+d.key)) * 100)
+  const yFunc = (d) => y((d.count / baselineMapping.get(d.key)) * 100)
 
   const chartArea = area()
     .curve(curveBumpX)
-    .x((d) => x(yearToDate(d.key)))
+    .x((d) => x(toDate(d.key)))
     .y0(y(0))
     .y1(yFunc)
 
   const chartLine = line()
     .curve(curveBumpX)
-    .x((d) => x(yearToDate(d.key)))
+    .x((d) => x(toDate(d.key)))
     .y(yFunc)
 
   const pathElements = svg.append('g')
@@ -196,10 +196,19 @@ function setupChart(container, data, config) {
       .append('circle')
       .on('click', (_e, d) => {
         if (config.searchUrl) {
+          const after = new Date(d.key)
+          let before
+          if (config.interval === 'month') {
+            before = new Date(after.getFullYear(), after.getMonth() + 1, 0)
+          } else if (config.interval === 'week') {
+            before = new Date(after.getTime() + 6 * 24 * 60 * 60 * 1000)
+          } else {
+            before = new Date(after.getFullYear(), 11, 31)
+          }
           const params = new URLSearchParams({
             q: d.term,
-            [`${config.dateparam}_after`]: `${d.key}-01-01`,
-            [`${config.dateparam}_before`]: `${d.key}-12-31`
+            [`${config.dateparam}_after`]: `${d.key}`,
+            [`${config.dateparam}_before`]: `${before.getFullYear()}-${String(before.getMonth() + 1).padStart(2, '0')}-${String(before.getDate()).padStart(2, '0')}`
           })
           window.open(`${config.searchUrl}?${params.toString()}`)
         }
@@ -207,7 +216,7 @@ function setupChart(container, data, config) {
       .attr('fill', (d) => color(d.term))
       // .attr("stroke-width", 2)
       // .attr("fill", "transparent")
-      .attr('cx', (d) => x(yearToDate(d.key)))
+      .attr('cx', (d) => x(toDate(d.key)))
       .attr('cy', yFunc)
       .attr('r', 5)
       .attr('style', 'cursor:pointer')
@@ -233,7 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupChart(chart, data, {
       searchUrl: chart.dataset.searchurl,
       queryparam: chart.dataset.queryparam,
-      dateparam: chart.dataset.dateparam
+      dateparam: chart.dataset.dateparam,
+      interval: chart.dataset.interval
     })
   })
 })
