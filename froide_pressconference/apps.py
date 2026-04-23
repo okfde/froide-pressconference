@@ -9,7 +9,10 @@ class FroidePressconferenceConfig(AppConfig):
 
     def ready(self):
         from froide.foirequest.models import FoiRequest
+        from froide.searchalert import alert_registry
 
+        from .alert import PressConferenceAlertConfiguration
         from .listeners import create_link
 
         FoiRequest.request_sent.connect(create_link)
+        alert_registry.register(PressConferenceAlertConfiguration())

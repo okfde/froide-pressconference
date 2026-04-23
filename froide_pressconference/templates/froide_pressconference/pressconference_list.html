@@ -1,29 +1,32 @@
 {% extends "froide_pressconference/base.html" %}
 {% load i18n %}
 {% load markup %}
+{% load searchalert_tags %}
 {% load sekizai_tags %}
 {% load form_helper %}
 {% block app_body %}
     <div class="container mt-3 mb-3">
         <div class="row justify-content-center">
-            <div class="col col-md-8">
+            <div class="col-md-10 col-lg-8">
                 <form method="get"
                       class="mb-4"
                       action="{% url "pressconference:pressconference-list" %}">
                     {% render_form form horizontal=False %}
-                    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                    <p class="text-end">
+                        <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+                    </p>
                 </form>
-            </div>
-        </div>
-        {% if facets and has_query %}
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-10">
-                    {% include "froide_pressconference/pressconference_date_facet.html" with terms=form.cleaned_data.q facet_interval=facet_interval %}
+                <div class="row my-3">
+                    <div class="col-6">{% search_alert_form query=form.q.value %}</div>
+                    {% if has_query %}
+                        <div class="col-6 text-end">
+                            {% blocktrans with num=page_obj.paginator.formatted_count count counter=count %}One result{% plural %}{{ num }} results{% endblocktrans %}
+                        </div>
+                    {% endif %}
                 </div>
-            </div>
-        {% endif %}
-        <div class="row justify-content-center">
-            <div class="col col-md-8">
+                {% if facets and has_query %}
+                    {% include "froide_pressconference/pressconference_date_facet.html" with terms=form.cleaned_data.q facet_interval=facet_interval %}
+                {% endif %}
                 {% if object_list %}
                     {% include "froide_pressconference/plugins/pressconference_list.html" %}
                     {% if is_paginated %}
