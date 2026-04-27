@@ -175,6 +175,7 @@ class Speech(models.Model):
         verbose_name = _("speech")
         verbose_name_plural = _("speeches")
         ordering = ["order", "id"]
+        permissions = (("can_use_presslaw", _("Can use press law")),)
 
     def __str__(self):
         return self.text[:50]
@@ -187,7 +188,7 @@ class Speech(models.Model):
     def is_question(self):
         return self.kind in (SpeechKind.QUESTION, SpeechKind.FOLLOWUP)
 
-    def make_request_url(self):
+    def make_request_url(self, law_type=""):
         if self.speaker and self.speaker.publicbody_id:
             path = reverse(
                 "foirequest-make_request",
@@ -200,9 +201,14 @@ class Speech(models.Model):
                     "In a press conference on {date}, {speaker} said:\n\n“{text}”\n\n[…write request here…]"
                 ).format(date=date, speaker=self.speaker.name, text=self.text),
             }
+            if law_type:
+                query["law_type"] = law_type
             query = urlencode(query, quote_via=quote)
             return f"{path}?{query}"
         return ""
+
+    def make_press_request_url(self):
+        return self.make_request_url(law_type="Presserecht")
 
 
 class PressConferenceFacetsCMSPlugin(CMSPlugin):
