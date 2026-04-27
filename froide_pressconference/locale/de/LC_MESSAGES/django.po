@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 15:28+0200\n"
-"PO-Revision-Date: 2026-04-23 15:28+0200\n"
+"POT-Creation-Date: 2026-04-27 14:08+0200\n"
+"PO-Revision-Date: 2026-04-27 14:08+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -165,6 +165,14 @@ msgid "Section %(order)s in %(press_conference)s"
 msgstr "Fragenkomplex %(order)s in %(press_conference)s"
 
 #: models.py
+msgid "unanswered"
+msgstr "unbeantwortet"
+
+#: models.py
+msgid "Flag"
+msgstr "Markierung"
+
+#: models.py
 msgid "Sidenote"
 msgstr "Klammerbemerkung"
 
@@ -205,6 +213,10 @@ msgid "speeches"
 msgstr "Reden"
 
 #: models.py
+msgid "Can use press law"
+msgstr "Kann Presserecht verwenden"
+
+#: models.py
 #, python-brace-format
 msgid ""
 "In a press conference on {date}, {speaker} said:\n"
@@ -223,6 +235,20 @@ msgstr ""
 #, python-format
 msgid "Facet graph for: %s"
 msgstr "Facetten-Graph für: %s"
+
+#: templates/froide_pressconference/includes/_flag.html
+#, python-format
+msgid "Unmark %(as_kind)s"
+msgstr "Markierung %(as_kind)s entfernen"
+
+#: templates/froide_pressconference/includes/_flag.html
+#, python-format
+msgid "Mark %(as_kind)s"
+msgstr "Markiere als %(as_kind)s"
+
+#: templates/froide_pressconference/includes/_flag.html
+msgid "You need to login to mark sections"
+msgstr "Sie müssen sich einloggen, um Abschnitte zu markieren"
 
 #: templates/froide_pressconference/pressconference_date_facet.html
 #, python-brace-format
@@ -250,6 +276,10 @@ msgstr "Auswählen"
 msgid "Enter something"
 msgstr "Etwas eingeben"
 
+#: templates/froide_pressconference/pressconference_detail.html
+msgid "Topics"
+msgstr "Themen"
+
 #: templates/froide_pressconference/pressconference_list.html
 msgid "Search"
 msgstr "Suche"
@@ -264,6 +294,14 @@ msgstr[1] "%(num)s Ergebnisse"
 #: templates/froide_pressconference/section.html
 msgid "Make request"
 msgstr "Anfrage stellen"
+
+#: templates/froide_pressconference/section.html
+msgid "More options"
+msgstr "Mehr Optionen"
+
+#: templates/froide_pressconference/section.html
+msgid "Make press request"
+msgstr "Presseanfrage stellen"
 
 #: templates/froide_pressconference/section.html
 msgid "Related FOI requests"
@@ -285,6 +323,19 @@ msgstr "suche/"
 msgctxt "url part"
 msgid "<slug:pc_slug>/"
 msgstr "<slug:pc_slug>/"
+
+#: urls.py
+msgctxt "url part"
+msgid "<int:section_id>/add-flag/"
+msgstr "<int:section_id>/add-flag/"
+
+#: urls.py
+msgctxt "url part"
+msgid "<int:section_id>/remove-flag/"
+msgstr "<int:section_id>/remove-flag/"
+
+#~ msgid "Themen"
+#~ msgstr "Themen"
 
 #~ msgctxt "url part"
 #~ msgid "facet.json"
