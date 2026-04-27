@@ -97,21 +97,11 @@ class Speaker(models.Model):
     def __str__(self):
         return f"{self.title + ' ' if self.title else ''}{self.name}"
 
-    def display_html(self):
+    def display_name(self):
         parts = []
         if self.title:
             parts.append(format_html("{} ", self.title))
         parts.append(format_html("{}", self.name))
-        if self.publicbody:
-            parts.append(
-                format_html(
-                    ' (<a href="{}">{}</a>)',
-                    self.publicbody.get_absolute_url(),
-                    self.publicbody.name,
-                )
-            )
-        elif self.organization:
-            parts.append(format_html("({})", self.organization))
         return mark_safe("".join(parts))
 
 

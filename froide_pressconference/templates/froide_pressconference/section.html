@@ -1,36 +1,96 @@
 {% load i18n %}
+{% load permission_helper %}
 <div id="section-{{ section.order }}" class="mb-4 border p-3">
     <a href="#section-{{ section.order }}" class="float-end">
         <span class="visually-hidden">Link to section</span>
         <span class="fa fa-link"></span>
     </a>
     {% for speech in section.speeches.all %}
-        {% if request.user.is_superuser %}
-            <a href="{% url 'admin:froide_pressconference_speech_change' speech.id %}"
-               class="float-end mb-2 me-2">
-                <span class="fa fa-edit"></span>
-            </a>
-        {% endif %}
-        {% if speech.is_sidenote %}
-            <p class="text-secondary{% if forloop.first %} mt-0{% endif %}">{{ speech.text|linebreaksbr }}</p>
-        {% elif speech.is_question %}
-            <h5 {% if forloop.first %}class="mt-0"{% endif %}>{{ speech.label }}</h5>
-            <div>{{ speech.text|linebreaks }}</div>
-        {% else %}
-            {% if speech.speaker %}
-                <h5 {% if forloop.first %}class="mt-0"{% endif %}>
-                    {{ speech.speaker.display_html }}
+        <div class="{% if not forloop.first %} mt-3{% endif %}">
+            {% if speech.is_sidenote %}
+                <p class="text-secondary{% if forloop.first %} mt-0{% endif %}">{{ speech.text|linebreaksbr }}</p>
+            {% elif speech.is_question %}
+                <div>
+                    <span class="fw-bold">{{ speech.label }}</span>
+                    {% if request.user.is_superuser %}
+                        <a href="{% url 'admin:froide_pressconference_speech_change' speech.id %}"
+                           class="link-secondary">
+                            <span class="fa fa-edit"></span>
+                        </a>
+                    {% endif %}
+                </div>
+                <div>{{ speech.text|linebreaks }}</div>
+            {% else %}
+                {% if speech.speaker %}
+                    <div class="d-flex">
+                        <div class="me-2">
+                            <span class="fw-bold">{{ speech.speaker.display_name }}</span>
+                            {% if request.user.is_superuser %}
+                                <a href="{% url 'admin:froide_pressconference_speech_change' speech.id %}"
+                                   class="link-secondary">
+                                    <span class="fa fa-edit"></span>
+                                </a>
+                            {% endif %}
+                            {% if speech.speaker.publicbody %}
+                                <div>
+                                    <a class="link-secondary link-underline-opacity-50"
+                                       href="{{ speech.speaker.publicbody.get_absolute_url }}">
+                                        {{ speech.speaker.publicbody.name }}
+                                    </a>
+                                </div>
+                            {% elif speech.speaker.organization %}
+                                <div>{{ speech.speaker.organization }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <p>{{ speech.text|linebreaks }}</p>
+                    </div>
                     {% with request_url=speech.make_request_url %}
                         {% if request_url %}
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ request_url }}">{% trans "Make request" %}</a>
+                            <div class="text-end">
+                                {% if request.user|has_perm:"froide_pressconference.can_use_presslaw" %}
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-outline-secondary"
+                                           href="{{ request_url }}"
+                                           target="_blank">{% trans "Make request" %}</a>
+                                        <button type="button"
+                                                class="btn btn-outline-secondary btn-sm dropdown-toggle dropdown-toggle-split"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            <span class="visually-hidden">{% translate "More options" %}</span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="{{ speech.make_press_request_url }}"
+                                                   target="_blank">
+                                                    <i class="fa fa-id-card" aria-hidden="true"></i>
+                                                    {% trans "Make press request" %}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <a class="btn btn-sm btn-outline-secondary" href="{{ request_url }}">{% trans "Make request" %}</a>
+                                {% endif %}
+                            </div>
                         {% endif %}
                     {% endwith %}
-                </h5>
-            {% elif speech.label %}
-                <h5 {% if forloop.first %}class="mt-0"{% endif %}>{{ speech.label }}</h5>
+                {% elif speech.label %}
+                    <div class="d-flex">
+                        <span class="fw-bold">{{ speech.label }}</span>
+                        {% if request.user.is_superuser %}
+                            <a href="{% url 'admin:froide_pressconference_speech_change' speech.id %}"
+                               class="link-secondary">
+                                <span class="fa fa-edit"></span>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <p>{{ speech.text|linebreaks }}</p>
+                {% endif %}
             {% endif %}
-            <p>{{ speech.text|linebreaks }}</p>
-        {% endif %}
+        </div>
     {% endfor %}
     {% if section.foirequests.all %}
         <hr />
