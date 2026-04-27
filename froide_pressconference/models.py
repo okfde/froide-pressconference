@@ -1,5 +1,6 @@
 from urllib.parse import quote, urlencode
 
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -131,6 +132,21 @@ class Section(models.Model):
 
     def get_absolute_url(self):
         return f"{self.press_conference.get_absolute_url()}#section-{self.order}"
+
+
+class FlagKind(models.TextChoices):
+    UNANSWERED = "unanswered", _("unanswered")
+
+
+class Flag(models.Model):
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    kind = models.CharField(choices=FlagKind.choices)
+
+    class Meta:
+        verbose_name = _("Flag")
+        verbose_name_plural = _("Flag")
 
 
 class SpeechKind(models.TextChoices):

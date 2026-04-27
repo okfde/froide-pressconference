@@ -1,0 +1,37 @@
+{% load i18n %}
+{% for kind, flag_value in section.flag_dict.items %}
+    {% if request.user.is_authenticated %}
+        {% if flag_value.can_delete %}
+            <form method="post"
+                  action="{% url "pressconference:remove_flag" section_id=section.id %}"
+                  class="ajaxified">
+                {% csrf_token %}
+                <input type="hidden" name="kind" value="{{ flag_value.kind }}" />
+                <button type="submit" class="btn btn-sm btn-outline-danger">
+                    {% blocktranslate with as_kind=flag_value.get_kind_display %}Unmark {{ as_kind }}{% endblocktranslate %}
+                </button>
+            </form>
+        {% else %}
+            <form method="post"
+                  action="{% url "pressconference:add_flag" section_id=section.id %}"
+                  class="ajaxified">
+                {% csrf_token %}
+                <input type="hidden" name="kind" value="{{ flag_value.kind }}" />
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-thumbs-down"></i>
+                    {% blocktranslate with as_kind=flag_value.get_kind_display %}Mark {{ as_kind }}{% endblocktranslate %}
+                </button>
+            </form>
+        {% endif %}
+    {% else %}
+        <span class="d-inline-block"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-title="{% translate "You need to login to mark sections" %}">
+            <button class="btn btn-sm btn-outline-secondary" disabled>
+                <i class="fa fa-thumbs-down"></i>
+                {% blocktranslate with as_kind=flag_value.get_kind_display %}Mark {{ as_kind }}{% endblocktranslate %}
+            </button>
+        </span>
+    {% endif %}
+{% endfor %}

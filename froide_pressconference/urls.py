@@ -1,7 +1,12 @@
 from django.urls import path
 from django.utils.translation import pgettext_lazy
 
-from .views import PressConferenceDetailView, PressConferenceListView
+from .views import (
+    PressConferenceDetailView,
+    PressConferenceListView,
+    add_flag,
+    remove_flag,
+)
 
 urlpatterns = [
     path(
@@ -23,5 +28,15 @@ urlpatterns = [
         pgettext_lazy("url part", "<slug:pc_slug>/"),
         PressConferenceDetailView.as_view(),
         name="pressconference-detail",
+    ),
+    path(
+        pgettext_lazy("url part", "<int:section_id>/add-flag/"),
+        add_flag,
+        name="add_flag",
+    ),
+    path(
+        pgettext_lazy("url part", "<int:section_id>/remove-flag/"),
+        remove_flag,
+        name="remove_flag",
     ),
 ]

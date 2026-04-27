@@ -5,6 +5,11 @@
         <span class="visually-hidden">Link to section</span>
         <span class="fa fa-link"></span>
     </a>
+    {% for kind, flag_value in section.flag_dict.items %}
+        {% if flag_value.count > 0 %}
+            <span class="badge text-bg-secondary float-end me-2">{{ flag_value.get_kind_display }}</span>
+        {% endif %}
+    {% endfor %}
     {% for speech in section.speeches.all %}
         <div class="{% if not forloop.first %} mt-3{% endif %}">
             {% if speech.is_sidenote %}
@@ -100,19 +105,24 @@
         {% endfor %}
         <hr />
     {% endif %}
-    <button type="button"
-            class="btn btn-outline-secondary btn-sm "
-            data-bs-toggle="collapse"
-            aria-expanded="false"
-            aria-controls="comments-{{ section.id }}"
-            data-bs-target="#comments-{{ section.id }}"
-            data-scrollto="comments-{{ section.id }}"
-            data-scrolltoblock="end">
-        <span class="fa fa-comments"></span>
-        {% with count=section.comment_list|length %}
-            {% blocktranslate count count=count %}One comment{% plural %}{{ count }} comments{% endblocktranslate %}
-        {% endwith %}
-    </button>
+    <div class="row mt-3 position-sticky bottom-0 bg-body py-1">
+        <div class="col-auto">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-sm "
+                    data-bs-toggle="collapse"
+                    aria-expanded="false"
+                    aria-controls="comments-{{ section.id }}"
+                    data-bs-target="#comments-{{ section.id }}"
+                    data-scrollto="comments-{{ section.id }}"
+                    data-scrolltoblock="end">
+                <span class="fa fa-comments"></span>
+                {% with count=section.comment_list|length %}
+                    {% blocktranslate count count=count %}One comment{% plural %}{{ count }} comments{% endblocktranslate %}
+                {% endwith %}
+            </button>
+        </div>
+        <div class="col-auto ms-auto text-end">{% include "froide_pressconference/includes/_flag.html" %}</div>
+    </div>
     <div id="comments-{{ section.id }}"
          class="collapse {% if section.comment_list|length %}show{% endif %}">
         <div class="py-4">

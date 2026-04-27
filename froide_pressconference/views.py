@@ -1,21 +1,27 @@
 from collections import defaultdict
+from dataclasses import dataclass
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 from django.db.models.functions import TruncMonth, TruncWeek, TruncYear
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
 
 from django_comments import get_model
 
 from froide.helper.breadcrumbs import Breadcrumbs, BreadcrumbView
 from froide.helper.search.views import BaseSearchView
+from froide.helper.utils import is_ajax
 
 from .documents import PressConferenceDocument
 from .filters import PressConferenceFilterSet
-from .models import PressConference, Section
+from .forms import FlagForm
+from .models import Flag, FlagKind, PressConference, Section
 
 
 def get_base_breadcrumb():
@@ -111,6 +117,46 @@ class PressConferenceListView(BaseSearchView, BreadcrumbView):
         return super().render_to_response(context, **response_kwargs)
 
 
+@dataclass
+class FlagValue:
+    kind: str
+    count: int = 0
+    can_delete: bool = False
+
+    def get_kind_display(self):
+        return dict(FlagKind.choices)[self.kind]
+
+
+def attach_flags(request, sections):
+    if sections and not hasattr(sections[0], "flag_dict"):
+        section_ids = [s.id for s in sections]
+        user_flags = defaultdict(set)
+        if request.user.is_authenticated:
+            flag_pairs = Flag.objects.filter(
+                section__in=section_ids, user=request.user
+            ).values_list("section_id", "kind")
+            for key, value in flag_pairs:
+                user_flags[key].add(value)
+
+        flags = (
+            Flag.objects.filter(section__in=section_ids)
+            .values("section_id", "kind")
+            .annotate(count=Count("*"))
+            .order_by("section_id", "kind", "-count")
+        )
+
+        flag_mapping = {}
+        for section in sections:
+            flag_mapping[section.id] = {k: FlagValue(kind=k) for k in FlagKind.values}
+        for fl in flags:
+            can_delete = fl["kind"] in user_flags.get(fl["section_id"], set())
+            flag_mapping[fl["section_id"]][fl["kind"]] = FlagValue(
+                kind=fl["kind"], count=fl["count"], can_delete=can_delete
+            )
+        for section in sections:
+            section.flag_dict = flag_mapping[section.id]
+
+
 class PressConferenceDetailView(DetailView, BreadcrumbView):
     model = PressConference
     slug_url_kwarg = "pc_slug"
@@ -118,20 +164,22 @@ class PressConferenceDetailView(DetailView, BreadcrumbView):
     template_name = "froide_pressconference/pressconference_detail.html"
 
     def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .exclude(slug="")
-            .prefetch_related(
-                "sections", "sections__speeches", "sections__speeches__speaker"
-            )
-        )
+        return super().get_queryset().exclude(slug="")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["sections"] = self.object.sections.all().prefetch_related("foirequests")
+        context["sections"] = self.object.sections.all().prefetch_related(
+            "foirequests",
+            "speeches",
+            "speeches__speaker",
+            "speeches__speaker__publicbody",
+        )
         self.attach_comments(context["sections"])
+        self.attach_flags(context["sections"])
         return context
+
+    def attach_flags(self, sections):
+        attach_flags(self.request, sections)
 
     def attach_comments(self, sections):
         if sections and not hasattr(sections[0], "comment_list"):
@@ -164,3 +212,33 @@ class PressConferenceDetailView(DetailView, BreadcrumbView):
         ]
 
         return breadcrumbs
+
+
+@login_required
+@require_POST
+def add_flag(request, section_id):
+    section = get_object_or_404(Section, id=int(section_id))
+    form = FlagForm(request.POST)
+    if form.is_valid():
+        form.save(request.user, section)
+    if is_ajax(request):
+        attach_flags(request, [section])
+        return render(
+            request, "froide_pressconference/includes/_flag.html", {"section": section}
+        )
+    return redirect(section)
+
+
+@login_required
+@require_POST
+def remove_flag(request, section_id):
+    section = get_object_or_404(Section, id=int(section_id))
+    form = FlagForm(request.POST)
+    if form.is_valid():
+        form.delete(request.user, section)
+    if is_ajax(request):
+        attach_flags(request, [section])
+        return render(
+            request, "froide_pressconference/includes/_flag.html", {"section": section}
+        )
+    return redirect(section)
