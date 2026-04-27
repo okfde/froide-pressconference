@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-27 15:26+0200\n"
-"PO-Revision-Date: 2026-04-27 14:08+0200\n"
+"PO-Revision-Date: 2026-04-27 15:44+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -252,7 +252,7 @@ msgstr "Sie müssen sich einloggen, um Abschnitte zu markieren"
 
 #: templates/froide_pressconference/plugins/pressconference_list.html
 msgid "Show more"
-msgstr ""
+msgstr "Mehr anzeigen"
 
 #: templates/froide_pressconference/pressconference_date_facet.html
 #, python-brace-format
