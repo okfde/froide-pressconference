@@ -5,7 +5,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
-from django.utils.html import format_html, mark_safe
+from django.utils.html import format_html, format_html_join, mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from cms.models.pluginmodel import CMSPlugin
@@ -63,6 +63,11 @@ class PressConference(models.Model):
     def get_absolute_url(self):
         return reverse(
             "pressconference:pressconference-detail", kwargs={"pc_slug": self.slug}
+        )
+
+    def description_as_li(self):
+        return format_html_join(
+            "\n", "<li>{}</li>", ((line,) for line in self.description.splitlines())
         )
 
 

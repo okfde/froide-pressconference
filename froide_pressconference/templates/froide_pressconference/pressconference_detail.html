@@ -11,7 +11,9 @@
                         <div class="card-body">
                             <details>
                                 <summary>{% translate "Topics" %}</summary>
-                                {{ press_conference.description|linebreaksbr }}
+                                <ul>
+                                    {{ press_conference.description_as_li }}
+                                </ul>
                             </details>
                         </div>
                     </div>

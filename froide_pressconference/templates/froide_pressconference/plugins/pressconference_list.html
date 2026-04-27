@@ -1,16 +1,30 @@
-<ol class="list-group">
-    {% for object in object_list %}
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto">
-                <h3 class="fs-5">
-                    <a href="{{ object.get_absolute_url }}" class="fw-bold">{{ object.title }}</a>
-                </h3>
-                {% if object.query_highlight %}
-                    <div class="search-highlight">{{ object.query_highlight }}</div>
-                {% else %}
-                    {{ object.description|linebreaks }}
-                {% endif %}
+{% load i18n %}
+{% for object in object_list %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="{{ object.get_absolute_url }}" class="fw-bold">{{ object.title }}</a>
+            </h5>
+            <div class="reveal-cutoff"
+                 data-cutoff="12rem"
+                 style="--reveal-color: var(--bs-body-bg)">
+                <div class="reveal-inner" id="reveal-{{ instance.pk }}-{{ object.pk }}">
+                    {% if object.query_highlight %}
+                        <div class="search-highlight">{{ object.query_highlight }}</div>
+                    {% elif object.description %}
+                        <ul>
+                            {{ object.description_as_li }}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="reveal-show">
+                    <a href="#!"
+                       class="action-link"
+                       role="button"
+                       aria-controls="reveal-{{ instance.pk }}-{{ object.pk }}"
+                       aria-expanded="false">{% translate "Show more" %}</a>
+                </div>
             </div>
-        </li>
-    {% endfor %}
-</ol>
+        </div>
+    </div>
+{% endfor %}

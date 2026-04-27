@@ -20,7 +20,7 @@ class PressConferenceListPlugin(CMSPluginBase):
 
     def render(self, context, instance, placeholder):
         context = super().render(context, instance, placeholder)
-        context["plugin"] = instance
+        context["instance"] = instance
         context["object_list"] = PressConference.objects.all()[:5]
         return context
 
