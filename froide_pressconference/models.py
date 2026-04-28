@@ -61,6 +61,8 @@ class PressConference(models.Model):
         return self.title
 
     def get_absolute_url(self):
+        if not self.slug:
+            return ""
         return reverse(
             "pressconference:pressconference-detail", kwargs={"pc_slug": self.slug}
         )

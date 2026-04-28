@@ -42,7 +42,7 @@ def get_facet_data(
     elif interval == "week":
         annotation_func = TruncWeek
 
-    base_qs = PressConference.objects.all()
+    base_qs = PressConference.objects.exclude(slug="")
     if start_date:
         base_qs = base_qs.filter(date__gte=start_date)
     if end_date:
