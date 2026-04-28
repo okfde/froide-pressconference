@@ -1,5 +1,11 @@
 from django.contrib import admin
+from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
+
+from froide.helper.admin_utils import (
+    ForeignKeyFilter,
+    make_choose_object_action,
+)
 
 from .models import (
     PressConference,
@@ -43,12 +49,34 @@ class TopicAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
+def execute_replace_speakers(admin, request, queryset, action_obj):
+    Speech.objects.filter(speaker__in=queryset).update(speaker=action_obj)
+
+
 @admin.register(Speaker)
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "organization", "publicbody")
+    list_display = ("__str__", "organization", "publicbody", "count_speeches")
     search_fields = ("name", "organization", "title")
-    list_filter = ("organization", "publicbody")
+    list_filter = ("organization", ("publicbody", ForeignKeyFilter))
     raw_id_fields = ("publicbody",)
+
+    actions = ["replace_speakers"]
+
+    replace_speakers = make_choose_object_action(
+        Speaker, execute_replace_speakers, _("Replace speakers with...")
+    )
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .prefetch_related("publicbody")
+            .annotate(speech_count=Count("speeches"))
+        )
+
+    @admin.display(description=_("speech count"), ordering="speech_count")
+    def count_speeches(self, obj):
+        return obj.speech_count
 
 
 @admin.register(Section)
@@ -67,7 +95,7 @@ class SectionAdmin(admin.ModelAdmin):
 @admin.register(Speech)
 class SpeechAdmin(admin.ModelAdmin):
     list_display = ("section", "kind", "order", "speaker")
-    list_filter = ("kind", "section__press_conference")
+    list_filter = ("kind", ("section__press_conference", ForeignKeyFilter))
     search_fields = ("text", "speaker__name")
     raw_id_fields = ("speaker", "section")
     ordering = ("section", "order")
