@@ -67,6 +67,9 @@ class PressConference(models.Model):
             "pressconference:pressconference-detail", kwargs={"pc_slug": self.slug}
         )
 
+    def get_absolute_domain_url(self):
+        return settings.SITE_URL + self.get_absolute_url()
+
     def description_as_li(self):
         return format_html_join(
             "\n", "<li>{}</li>", ((line,) for line in self.description.splitlines())
