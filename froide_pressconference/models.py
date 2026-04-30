@@ -211,11 +211,12 @@ class Speech(models.Model):
                 kwargs={"publicbody_ids": self.speaker.publicbody_id},
             )
             date = date_format(self.section.press_conference.date)
+            text = self.text[:1000] + ("[...]" if len(self.text) > 1000 else "")
             query = {
                 "ref": f"pressconference:{self.section.pk}@{self.section.press_conference.pk}",
                 "body": _(
                     "In a press conference on {date}, {speaker} said:\n\n“{text}”\n\n[…write request here…]"
-                ).format(date=date, speaker=self.speaker.name, text=self.text),
+                ).format(date=date, speaker=self.speaker.name, text=text),
             }
             if law_type:
                 query["law_type"] = law_type
