@@ -1,5 +1,4 @@
 import re
-import zoneinfo
 from datetime import datetime as dt
 from functools import cache
 from pathlib import Path
@@ -12,6 +11,7 @@ from froide.helper.db_utils import save_obj_with_slug
 from froide.publicbody.models import PublicBody
 
 from ..models import (
+    BERLIN_TZ,
     PressConference,
     Section,
     Speaker,
@@ -47,8 +47,6 @@ DE_MONTH_MAPPING = {
 
 COLLAPSE_WS = re.compile(r" +")
 COLLAPSE_2NL = re.compile(r"\n\n\n+")
-
-BERLIN_TZ = zoneinfo.ZoneInfo("Europe/Berlin")
 
 
 def clean_text(text):
@@ -87,7 +85,7 @@ def parse_date(date_str: str) -> dt:
             month_int = int(month_or_num)
         except ValueError:
             month_int = DE_MONTH_MAPPING[month_or_num]
-        return dt(int(year), month_int, int(day)).astimezone(BERLIN_TZ)
+        return dt(int(year), month_int, int(day), tzinfo=BERLIN_TZ)
     raise ValueError(f"Could not parse date from '{date_str}'")
 
 

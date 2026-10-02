@@ -1,3 +1,4 @@
+import zoneinfo
 from urllib.parse import quote, urlencode
 
 from django.conf import settings
@@ -12,6 +13,8 @@ from cms.models.pluginmodel import CMSPlugin
 
 from froide.foirequest.models import FoiRequest
 from froide.publicbody.models import PublicBody
+
+BERLIN_TZ = zoneinfo.ZoneInfo("Europe/Berlin")
 
 
 class PressConferenceCategory(models.Model):
@@ -210,7 +213,9 @@ class Speech(models.Model):
                 "foirequest-make_request",
                 kwargs={"publicbody_ids": self.speaker.publicbody_id},
             )
-            date = date_format(self.section.press_conference.date)
+            date = date_format(
+                timezone.localtime(self.section.press_conference.date, BERLIN_TZ)
+            )
             text = self.text[:1000] + ("[...]" if len(self.text) > 1000 else "")
             query = {
                 "ref": f"pressconference:{self.section.pk}@{self.section.press_conference.pk}",
