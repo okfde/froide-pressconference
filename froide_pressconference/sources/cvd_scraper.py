@@ -29,7 +29,7 @@ async def login(tab: Tab, username, password):
     login_button = await tab.find(tag_name="input", name="submit")
     await login_button.click()
 
-    await tab.find(text="Willkommen", tag_name="h1", timeout=20)
+    await tab.find(text="Logout", tag_name="a", timeout=20)
 
 
 async def start_search(tab: Tab):
