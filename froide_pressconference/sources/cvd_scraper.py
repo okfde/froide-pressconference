@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from zoneinfo import ZoneInfo
 
@@ -87,10 +86,11 @@ async def download_listing(tab, result_path, page_num=1):
 
 
 class DummyHandler:
-    def should_download(self, url: str) -> bool:
+    async def should_download(self, url: str) -> bool:
         return True
 
-    def store_html(self, url: str, file_path: str, content: str): ...
+    async def store_html(self, url: str, file_path: str, content: str):
+        pass
 
 
 async def download_pages(tab: Tab, handler: DummyHandler):
@@ -114,12 +114,14 @@ async def download_pages(tab: Tab, handler: DummyHandler):
             await handler.store_html(item_url, file_path, html)
 
 
-async def download_cvd(username, password, handler, chrome_binary_path=None):
+async def download_cvd(
+    username, password, handler, chrome_binary_path=None, headless=True
+):
     options = ChromiumOptions()
     if chrome_binary_path:
         options.binary_location = chrome_binary_path
 
-    options.headless = True
+    options.headless = headless
     options.block_notifications = True
     options.block_popups = True
 
@@ -127,11 +129,3 @@ async def download_cvd(username, password, handler, chrome_binary_path=None):
         tab = await browser.start()
         await login(tab, username, password)
         await download_pages(tab, handler)
-
-
-if __name__ == "__main__":
-    import os
-
-    username, password = os.environ["CVD_CREDENTIALS"].split(",", 1)
-    handler = DummyHandler()
-    asyncio.run(download_cvd(username, password, handler))
