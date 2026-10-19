@@ -124,6 +124,8 @@ async def download_cvd(
     options.headless = headless
     options.block_notifications = True
     options.block_popups = True
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
     async with Chrome(options=options) as browser:
         tab = await browser.start()
